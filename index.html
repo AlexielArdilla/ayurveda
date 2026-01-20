@@ -3,199 +3,355 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test de Constitución Ayurvédica (Prakriti)</title>
+    <title>Cuestionario Integral Prakriti - 48 Indicadores</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f5f2;
-            color: #2d3436;
-        }
-        h1, h2 {
-            font-family: 'Playfair Display', serif;
-        }
-        .option-card {
-            transition: all 0.2s ease;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-        .option-card:hover {
-            transform: translateY(-2px);
-            background-color: #ffffff;
-        }
-        .option-card.selected {
-            border-color: #8b5cf6;
-            background-color: #f3f0ff;
-        }
-        .progress-bar {
-            transition: width 0.4s ease;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #fcfaf8; color: #2d3436; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+        .option-card { transition: all 0.2s ease; cursor: pointer; border: 2px solid transparent; }
+        .option-card:hover { transform: translateY(-2px); background-color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .option-card.selected { border-color: #8b5cf6; background-color: #f3f0ff; }
+        .progress-bar { transition: width 0.3s ease; }
+        .category-badge { font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
     <header class="bg-white border-b border-stone-200 py-6 px-4 text-center sticky top-0 z-10 shadow-sm">
-        <h1 class="text-2xl md:text-3xl text-stone-800">Descubre tu Prakriti</h1>
-        <p class="text-stone-500 text-sm mt-1">Cuestionario Integral de Autoconocimiento</p>
+        <h1 class="text-2xl text-stone-800">Cuestionario Maestro de Prakriti</h1>
+        <p class="text-stone-500 text-xs mt-1 uppercase tracking-widest">Protocolo de Investigación Integral (48 Puntos)</p>
     </header>
 
     <main id="app" class="flex-grow container mx-auto max-w-2xl px-4 py-8">
+        
         <!-- Pantalla de Inicio -->
-        <div id="start-screen" class="text-center space-y-6">
+        <div id="start-screen" class="space-y-6">
             <div class="bg-white p-8 rounded-2xl shadow-sm border border-stone-100">
-                <p class="text-lg text-stone-600 leading-relaxed mb-6">
-                    Este test está basado en protocolos clínicos de investigación ayurvédica. Para obtener un resultado preciso, responde según tus tendencias naturales <strong>a lo largo de tu vida</strong>, no solo como te sientes hoy.
+                <h2 class="text-2xl mb-4 text-stone-800">Evaluación de la Constitución Ayurvédica</h2>
+                <p class="text-stone-600 leading-relaxed mb-6">
+                    Has iniciado el cuestionario maestro basado en el <em>Charaka Samhita</em>. Esta versión extendida de 48 preguntas permite una diferenciación precisa entre las combinaciones bidoshicas y tridoshicas.
                 </p>
-                <button onclick="startQuiz()" class="bg-stone-800 text-white px-8 py-3 rounded-full font-semibold hover:bg-stone-700 transition">
-                    Comenzar Cuestionario
+                <div class="bg-stone-50 p-4 rounded-xl mb-6 text-sm text-stone-500 italic">
+                    Nota: Responda basándose en sus tendencias históricas de vida (Prakriti), no en estados temporales de enfermedad (Vikriti).
+                </div>
+                <button onclick="startQuiz()" class="w-full bg-stone-800 text-white px-8 py-4 rounded-xl font-semibold hover:bg-stone-700 transition shadow-lg">
+                    Comenzar Evaluación Completa
                 </button>
             </div>
         </div>
 
         <!-- Pantalla de Cuestionario -->
-        <div id="quiz-screen" class="hidden space-y-8">
-            <div class="w-full bg-stone-200 rounded-full h-2">
-                <div id="progress" class="bg-purple-500 h-2 rounded-full progress-bar" style="width: 0%"></div>
-            </div>
-
-            <div id="question-container" class="space-y-4">
-                <h2 id="question-title" class="text-xl md:text-2xl text-stone-800"></h2>
-                <div id="options-grid" class="grid grid-cols-1 gap-4">
-                    <!-- Opciones inyectadas por JS -->
+        <div id="quiz-screen" class="hidden space-y-6">
+            <div class="flex justify-between items-end">
+                <div>
+                    <span id="category-label" class="category-badge text-purple-600 bg-purple-50 px-2 py-1 rounded"></span>
+                    <h2 id="question-title" class="text-xl md:text-2xl text-stone-800 mt-2"></h2>
                 </div>
+                <span id="counter" class="text-stone-400 text-sm font-medium"></span>
             </div>
 
-            <div class="flex justify-between items-center pt-4">
-                <button id="prev-btn" onclick="prevQuestion()" class="text-stone-400 font-medium disabled:opacity-30">
-                    &larr; Anterior
+            <div class="w-full bg-stone-200 rounded-full h-1.5">
+                <div id="progress" class="bg-purple-500 h-1.5 rounded-full progress-bar" style="width: 0%"></div>
+            </div>
+
+            <div id="options-grid" class="grid grid-cols-1 gap-3">
+                <!-- Opciones -->
+            </div>
+
+            <div class="flex justify-between items-center pt-6 border-t border-stone-100">
+                <button id="prev-btn" onclick="prevQuestion()" class="text-stone-500 hover:text-stone-800 font-medium disabled:opacity-30 flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    Anterior
                 </button>
-                <span id="counter" class="text-stone-400 text-sm"></span>
+                <div class="text-xs text-stone-400">Guarda automáticamente al seleccionar</div>
             </div>
         </div>
 
         <!-- Pantalla de Resultados -->
         <div id="result-screen" class="hidden space-y-8">
-            <div class="bg-white p-8 rounded-2xl shadow-lg border border-stone-100">
-                <h2 class="text-3xl text-center mb-6">Tu Análisis de Doshas</h2>
+            <div class="bg-white p-8 rounded-3xl shadow-xl border border-stone-100">
+                <h2 class="text-3xl text-center mb-8">Su Perfil de Tridoshas</h2>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" id="percentages">
-                    <!-- Barras de porcentaje inyectadas -->
+                <div class="space-y-6 mb-10" id="percentages-visual">
+                    <!-- Barras horizontales -->
                 </div>
 
-                <div id="analysis-text" class="prose prose-stone max-w-none text-stone-700 space-y-6">
-                    <!-- Texto de análisis inyectado -->
+                <div id="analysis-box" class="space-y-6">
+                    <!-- Análisis profundo -->
                 </div>
 
-                <div class="mt-10 text-center">
-                    <button onclick="location.reload()" class="border border-stone-300 px-6 py-2 rounded-full text-stone-600 hover:bg-stone-50">
-                        Repetir Test
-                    </button>
+                <div class="mt-12 pt-8 border-t border-stone-100 flex flex-col gap-4">
+                    <button onclick="location.reload()" class="bg-stone-800 text-white py-4 rounded-xl font-bold">Reiniciar Cuestionario</button>
+                    <button onclick="window.print()" class="text-stone-500 text-sm hover:underline text-center">Descargar Reporte (PDF)</button>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="py-6 text-center text-stone-400 text-xs">
-        <p>© 2026 Protocolo de Investigación Ayurvédica - Herramienta Educativa</p>
-    </footer>
-
     <script>
+        const categories = {
+            MORPHO: "Morfología y Estructura (Sharira)",
+            METABO: "Fisiología y Metabolismo (Agni)",
+            CLINIC: "Indicadores Clínicos",
+            PSYCHO: "Neuropsicología y Mente",
+            LIFESTYLE: "Comportamiento y Estilo de Vida"
+        };
+
         const questions = [
-            {
-                id: 1,
-                title: "¿Cómo clasificaría su estructura ósea y marco físico natural?",
-                options: [
-                    { type: 'vata', text: 'Delgado, estrecho, muy alto o muy bajo. Huesos prominentes y ligeros.' },
-                    { type: 'pitta', text: 'Mediano, proporcionado y simétrico. Estructura atlética natural.' },
-                    { type: 'kapha', text: 'Ancho, denso ("huesos grandes"). Estructura sólida y resistente.' }
-                ]
-            },
-            {
-                id: 2,
-                title: "¿Cuál es la textura y temperatura predominante de su piel?",
-                options: [
-                    { type: 'vata', text: 'Seca, fina, fría y áspera. Tendencia a agrietarse.' },
-                    { type: 'pitta', text: 'Cálida, suave, sensible. Propensa a rojeces o lunares.' },
-                    { type: 'kapha', text: 'Fresca, gruesa, pálida y suave. Naturalmente hidratada y aceitosa.' }
-                ]
-            },
-            {
-                id: 3,
-                title: "Describa la densidad y textura de su cabello:",
-                options: [
-                    { type: 'vata', text: 'Seco, escaso, fino y quebradizo. A menudo rizado o encrespado.' },
-                    { type: 'pitta', text: 'Fino, lacio y sedoso. Tendencia a encanecer o calvicie prematura.' },
-                    { type: 'kapha', text: 'Grueso, denso, ondulado y lustroso. Muy fuerte y abundante.' }
-                ]
-            },
-            {
-                id: 4,
-                title: "¿Cómo describiría la cualidad de su mirada y sus ojos?",
-                options: [
-                    { type: 'vata', text: 'Pequeños, hundidos, mirada inquieta y parpadeo frecuente.' },
-                    { type: 'pitta', text: 'Medianos, mirada aguda y penetrante. Sensibles a la luz.' },
-                    { type: 'kapha', text: 'Grandes, redondos, pestañas espesas. Mirada calmada y serena.' }
-                ]
-            },
-            {
-                id: 5,
-                title: "¿Cómo es la regularidad de su apetito y digestión?",
-                options: [
-                    { type: 'vata', text: 'Errático e irregular. Gases y distensión abdominal frecuente.' },
-                    { type: 'pitta', text: 'Intenso y puntual. Si no como, me irrito (hambre feroz).' },
-                    { type: 'kapha', text: 'Bajo pero constante. Digestión lenta, me siento pesado tras comer.' }
-                ]
-            },
-            {
-                id: 6,
-                title: "Describa su patrón de eliminación (evacuaciones):",
-                options: [
-                    { type: 'vata', text: 'Irregular, tendencia al estreñimiento. Heces secas o duras.' },
-                    { type: 'pitta', text: 'Frecuente (varias veces al día). Heces blandas o sueltas.' },
-                    { type: 'kapha', text: 'Regular y predecible (1 vez al día). Heces pesadas y formadas.' }
-                ]
-            },
-            {
-                id: 7,
-                title: "¿Cuál es su tolerancia a las temperaturas?",
-                options: [
-                    { type: 'vata', text: 'Aversión al frío y al viento. Manos y pies siempre fríos.' },
-                    { type: 'pitta', text: 'Aversión al calor y al sol directo. Sudo profusamente.' },
-                    { type: 'kapha', text: 'Aversión al frío húmedo (niebla). Tolero bien el calor seco.' }
-                ]
-            },
-            {
-                id: 8,
-                title: "Bajo situaciones de estrés agudo, ¿cuál es su reacción?",
-                options: [
-                    { type: 'vata', text: 'Miedo, ansiedad, preocupación excesiva e insomnio.' },
-                    { type: 'pitta', text: 'Ira, irritabilidad, impaciencia y agresividad verbal.' },
-                    { type: 'kapha', text: 'Retraimiento, silencio, terquedad o comer por emoción.' }
-                ]
-            },
-            {
-                id: 9,
-                title: "¿Cómo es su estilo de aprendizaje y memoria?",
-                options: [
-                    { type: 'vata', text: 'Aprendo rápido pero olvido rápido. Atención dispersa.' },
-                    { type: 'pitta', text: 'Intelecto agudo y lógico. Excelente enfoque y memoria.' },
-                    { type: 'kapha', text: 'Aprendizaje lento pero memoria a largo plazo excepcional.' }
-                ]
-            },
-            {
-                id: 10,
-                title: "¿Cómo es la calidad de su sueño habitualmente?",
-                options: [
-                    { type: 'vata', text: 'Ligero e interrumpido. Dificultad para conciliar el sueño.' },
-                    { type: 'pitta', text: 'Moderado (6-8h). Sueños intensos, vívidos y a color.' },
-                    { type: 'kapha', text: 'Pesado y prolongado (>8h). Dificultad extrema para despertar.' }
-                ]
-            }
+            // CATEGORÍA: MORFOLOGÍA
+            { cat: categories.MORPHO, title: "Estructura Ósea / Marco Físico", options: [
+                { type: 'v', text: 'Delgado, estrecho, huesos prominentes. Muy alto o muy bajo.' },
+                { type: 'p', text: 'Mediano, proporcionado, desarrollo muscular atlético.' },
+                { type: 'k', text: 'Ancho, denso, "huesos grandes", tendencia a la corpulencia.' }
+            ]},
+            { cat: categories.MORPHO, title: "Peso Corporal (Tendencia histórica)", options: [
+                { type: 'v', text: 'Bajo peso, dificultad extrema para ganar kilos.' },
+                { type: 'p', text: 'Peso estable, moderada facilidad para ganar/perder.' },
+                { type: 'k', text: 'Sobrepeso fácil, gran dificultad para perder kilos.' }
+            ]},
+            { cat: categories.MORPHO, title: "Textura de la Piel", options: [
+                { type: 'v', text: 'Seca, áspera, fina, con tendencia a agrietarse.' },
+                { type: 'p', text: 'Suave, cálida, ligeramente aceitosa en zona T.' },
+                { type: 'k', text: 'Gruesa, suave, naturalmente muy hidratada y elástica.' }
+            ]},
+            { cat: categories.MORPHO, title: "Temperatura de la Piel", options: [
+                { type: 'v', text: 'Manos y pies fríos con frecuencia.' },
+                { type: 'p', text: 'Piel caliente al tacto, tolera mal el calor.' },
+                { type: 'k', text: 'Fresca y húmeda, pero estable.' }
+            ]},
+            { cat: categories.MORPHO, title: "Color y Reacción de la Piel", options: [
+                { type: 'v', text: 'Tono apagado, grisáceo, venas visibles.' },
+                { type: 'p', text: 'Rosada, cobriza, propensa a pecas y rojeces.' },
+                { type: 'k', text: 'Pálida, blanquecina, muy uniforme y clara.' }
+            ]},
+            { cat: categories.MORPHO, title: "Densidad del Cabello", options: [
+                { type: 'v', text: 'Escaso, fino, seco.' },
+                { type: 'p', text: 'Fino pero moderado, tendencia a la calvicie.' },
+                { type: 'k', text: 'Muy denso, abundante y fuerte.' }
+            ]},
+            { cat: categories.MORPHO, title: "Textura del Cabello", options: [
+                { type: 'v', text: 'Rizado irregular, encrespado o quebradizo.' },
+                { type: 'p', text: 'Lacio, sedoso, tiende a ser graso.' },
+                { type: 'k', text: 'Grueso, ondulado, brillante y resistente.' }
+            ]},
+            { cat: categories.MORPHO, title: "Tamaño y Forma de los Ojos", options: [
+                { type: 'v', text: 'Pequeños, hundidos, a veces muy juntos.' },
+                { type: 'p', text: 'Medianos, mirada aguda y penetrante.' },
+                { type: 'k', text: 'Grandes, prominentes, con forma de loto.' }
+            ]},
+            { cat: categories.MORPHO, title: "Pestañas", options: [
+                { type: 'v', text: 'Cortas, escasas y secas.' },
+                { type: 'p', text: 'Finas, sedosas, de longitud media.' },
+                { type: 'k', text: 'Largas, espesas, curvas y oscuras.' }
+            ]},
+            { cat: categories.MORPHO, title: "Esclerótica (Blanco del ojo)", options: [
+                { type: 'v', text: 'Grisácea, azulada o amarillenta apagada.' },
+                { type: 'p', text: 'Propensa a enrojecerse o con capilares visibles.' },
+                { type: 'k', text: 'Blanco lechoso, brillante y clara.' }
+            ]},
+
+            // CATEGORÍA: METABOLISMO
+            { cat: categories.METABO, title: "Intensidad del Apetito", options: [
+                { type: 'v', text: 'Errático: a veces voraz, a veces nulo.' },
+                { type: 'p', text: 'Intenso, insaciable y puntual.' },
+                { type: 'k', text: 'Bajo pero constante, puede saltarse comidas.' }
+            ]},
+            { cat: categories.METABO, title: "Digestión (Postprandial)", options: [
+                { type: 'v', text: 'Frecuentes gases, ruidos e hinchazón.' },
+                { type: 'p', text: 'Rápida, tendencia a la acidez o reflujo.' },
+                { type: 'k', text: 'Lenta, sensación de pesadez prolongada.' }
+            ]},
+            { cat: categories.METABO, title: "Hábito de Evacuación", options: [
+                { type: 'v', text: 'Irregular, tendencia crónica al estreñimiento.' },
+                { type: 'p', text: 'Frecuente (2-3 veces), urgente si es picante.' },
+                { type: 'k', text: 'Regular, una vez al día, muy predecible.' }
+            ]},
+            { cat: categories.METABO, title: "Consistencia de las Heces", options: [
+                { type: 'v', text: 'Duras, secas, pequeñas y oscuras.' },
+                { type: 'p', text: 'Blandas, amarillentas, a veces diarrea.' },
+                { type: 'k', text: 'Pesadas, voluminosas, bien formadas.' }
+            ]},
+            { cat: categories.METABO, title: "Tolerancia Ambiental", options: [
+                { type: 'v', text: 'Aversión extrema al frío y al viento.' },
+                { type: 'p', text: 'Aversión al calor intenso y sol directo.' },
+                { type: 'k', text: 'Aversión a la humedad, niebla y frío húmedo.' }
+            ]},
+            { cat: categories.METABO, title: "Cantidad de Sudoración", options: [
+                { type: 'v', text: 'Muy escasa, incluso haciendo ejercicio.' },
+                { type: 'p', text: 'Profusa, sudo con el mínimo esfuerzo.' },
+                { type: 'k', text: 'Moderada y constante tras esfuerzo largo.' }
+            ]},
+            { cat: categories.METABO, title: "Olor del Sudor", options: [
+                { type: 'v', text: 'Sin olor o muy ligero.' },
+                { type: 'p', text: 'Olor fuerte, ácido o penetrante.' },
+                { type: 'k', text: 'Olor suave, agradable o dulzón.' }
+            ]},
+            { cat: categories.METABO, title: "Sed Natural", options: [
+                { type: 'v', text: 'Variable, a veces olvido beber agua.' },
+                { type: 'p', text: 'Sed intensa, prefiero bebidas frías.' },
+                { type: 'k', text: 'Sed escasa, bebo por hábito, no por necesidad.' }
+            ]},
+            { cat: categories.METABO, title: "Nivel de Energía General", options: [
+                { type: 'v', text: 'Ráfagas cortas de energía seguidas de agotamiento.' },
+                { type: 'p', text: 'Energía alta y dirigida a metas.' },
+                { type: 'k', text: 'Energía estable, gran resistencia de fondo.' }
+            ]},
+            { cat: categories.METABO, title: "Circulación Periférica", options: [
+                { type: 'v', text: 'Pobre, extremidades frías casi siempre.' },
+                { type: 'p', text: 'Excelente, cuerpo siempre caliente.' },
+                { type: 'k', text: 'Moderada, estable en cualquier clima.' }
+            ]},
+
+            // CATEGORÍA: CLÍNICOS
+            { cat: categories.CLINIC, title: "Cualidad del Pulso", options: [
+                { type: 'v', text: 'Rápido, irregular, débil (como una serpiente).' },
+                { type: 'p', text: 'Saltarín, fuerte, rítmico (como una rana).' },
+                { type: 'k', text: 'Lento, constante, suave (como un cisne).' }
+            ]},
+            { cat: categories.CLINIC, title: "Resistencia a las Enfermedades", options: [
+                { type: 'v', text: 'Baja, me enfermo con facilidad por cambios climáticos.' },
+                { type: 'p', text: 'Moderada, suelo tener fiebres o inflamaciones.' },
+                { type: 'k', text: 'Muy alta, rara vez me enfermo seriamente.' }
+            ]},
+            { cat: categories.CLINIC, title: "Tendencia Menstrual (Si aplica / General)", options: [
+                { type: 'v', text: 'Irregular, flujo escaso, dolor punzante.' },
+                { type: 'p', text: 'Regular, flujo abundante, calor e irritabilidad.' },
+                { type: 'k', text: 'Larga duración, flujo con moco, pesadez sorda.' }
+            ]},
+            { cat: categories.CLINIC, title: "Salud de las Articulaciones", options: [
+                { type: 'v', text: 'Crujen con frecuencia (crepitación), tendencia al dolor.' },
+                { type: 'p', text: 'Flexibles, pero propensas a la inflamación.' },
+                { type: 'k', text: 'Fuertes, bien lubricadas y estables.' }
+            ]},
+
+            // CATEGORÍA: PSICO
+            { cat: categories.PSYCHO, title: "Velocidad de Aprendizaje", options: [
+                { type: 'v', text: 'Muy rápida, capto ideas abstractas al vuelo.' },
+                { type: 'p', text: 'Moderada, pero profunda y lógica.' },
+                { type: 'k', text: 'Lenta y metódica, requiero repetición.' }
+            ]},
+            { cat: categories.PSYCHO, title: "Retención de Memoria", options: [
+                { type: 'v', text: 'Pobre, olvido pronto lo aprendido.' },
+                { type: 'p', text: 'Buena, especialmente si es útil o lógica.' },
+                { type: 'k', text: 'Excelente a largo plazo, nunca olvido.' }
+            ]},
+            { cat: categories.PSYCHO, title: "Reacción ante el Estrés", options: [
+                { type: 'v', text: 'Ansiedad, miedo, nerviosismo extremo.' },
+                { type: 'p', text: 'Ira, impaciencia, frustración.' },
+                { type: 'k', text: 'Retraimiento, letargo, silencio o terquedad.' }
+            ]},
+            { cat: categories.PSYCHO, title: "Patrón de Sueño", options: [
+                { type: 'v', text: 'Ligero, interrumpido, me despierto con ruidos.' },
+                { type: 'p', text: 'Moderado (6-7h), sueño eficiente y reparador.' },
+                { type: 'k', text: 'Pesado, profundo, necesito más de 8 horas.' }
+            ]},
+            { cat: categories.PSYCHO, title: "Dificultad para Despertar", options: [
+                { type: 'v', text: 'Me despierto alerta de inmediato.' },
+                { type: 'p', text: 'Despierto fácil si tengo un plan.' },
+                { type: 'k', text: 'Extrema dificultad, sensación de inercia.' }
+            ]},
+            { cat: categories.PSYCHO, title: "Contenido de los Sueños", options: [
+                { type: 'v', text: 'Caóticos, volar, caer, ser perseguido.' },
+                { type: 'p', text: 'Intensos, fuego, lucha, aventura, a color.' },
+                { type: 'k', text: 'Tranquilos, agua, románticos, naturaleza.' }
+            ]},
+            { cat: categories.PSYCHO, title: "Enfoque y Concentración", options: [
+                { type: 'v', text: 'Disperso, tiendo a la multitarea sin terminar.' },
+                { type: 'p', text: 'Agudo, penetrante, gran capacidad de enfoque.' },
+                { type: 'k', text: 'Lento para empezar, pero constante una vez iniciado.' }
+            ]},
+            { cat: categories.PSYCHO, title: "Manejo de la Culpa", options: [
+                { type: 'v', text: 'Me culpo a mí mismo excesivamente.' },
+                { type: 'p', text: 'Culpo a los demás o a las circunstancias.' },
+                { type: 'k', text: 'Evito el conflicto y trato de ignorar la culpa.' }
+            ]},
+            { cat: categories.PSYCHO, title: "Toma de Decisiones", options: [
+                { type: 'v', text: 'Dudoso, cambio de opinión frecuentemente.' },
+                { type: 'p', text: 'Rápido, decidido y firme.' },
+                { type: 'k', text: 'Lento, analizo demasiado por seguridad.' }
+            ]},
+            { cat: categories.PSYCHO, title: "Interacción Social", options: [
+                { type: 'v', text: 'Hablador, entusiasta, gesticulo mucho.' },
+                { type: 'p', text: 'Líder, convincente, a veces dominante.' },
+                { type: 'k', text: 'Leal, buen oyente, evito discusiones.' }
+            ]},
+
+            // CATEGORÍA: ESTILO DE VIDA
+            { cat: categories.LIFESTYLE, title: "Relación con el Dinero", options: [
+                { type: 'v', text: 'Gastador impulsivo, se me escapa de las manos.' },
+                { type: 'p', text: 'Gestor astuto, invierto en calidad y estatus.' },
+                { type: 'k', text: 'Ahorrador nato, acumulo por seguridad.' }
+            ]},
+            { cat: categories.LIFESTYLE, title: "Velocidad al Hablar", options: [
+                { type: 'v', text: 'Rápida, atropellada, salto de tema en tema.' },
+                { type: 'p', text: 'Directa, clara, autoritaria.' },
+                { type: 'k', text: 'Lenta, pausada, rítmica y melodiosa.' }
+            ]},
+            { cat: categories.LIFESTYLE, title: "Caminado y Movimiento", options: [
+                { type: 'v', text: 'Rápido, pasos cortos y ligeros.' },
+                { type: 'p', text: 'Decidido, con propósito y rítmico.' },
+                { type: 'k', text: 'Lento, pesado, pasos firmes.' }
+            ]},
+            { cat: categories.LIFESTYLE, title: "Antojo de Sabores", options: [
+                { type: 'v', text: 'Dulce, Salado y Ácido (busco nutrición).' },
+                { type: 'p', text: 'Dulce, Amargo y Astringente (busco enfriar).' },
+                { type: 'k', text: 'Picante, Amargo y Astringente (busco estimular).' }
+            ]},
+            { cat: categories.LIFESTYLE, title: "Preferencia de Comida", options: [
+                { type: 'v', text: 'Caldos calientes, aceitosos y pesados.' },
+                { type: 'p', text: 'Ensaladas frescas, frutas y helados.' },
+                { type: 'k', text: 'Comidas secas, tostadas y muy especiadas.' }
+            ]},
+            { cat: categories.LIFESTYLE, title: "Vida Sexual", options: [
+                { type: 'v', text: 'Variable, deseo irregular, fantasías abundantes.' },
+                { type: 'p', text: 'Intensa, apasionada, centrada en el placer.' },
+                { type: 'k', text: 'Deseo constante pero bajo, muy romántico y fiel.' }
+            ]},
+            { cat: categories.LIFESTYLE, title: "Capacidad de Perseverancia", options: [
+                { type: 'v', text: 'Baja, me aburro y cambio de proyecto rápido.' },
+                { type: 'p', text: 'Alta si hay un desafío u objetivo claro.' },
+                { type: 'k', text: 'Infinita, puedo hacer lo mismo años con calma.' }
+            ]},
+            { cat: categories.LIFESTYLE, title: "Relación con el Cambio", options: [
+                { type: 'v', text: 'Me encanta la novedad, me adapto rápido.' },
+                { type: 'p', text: 'Acepto cambios si mejoran la eficiencia.' },
+                { type: 'k', text: 'Me resisto al cambio, prefiero la rutina.' }
+            ]},
+            { cat: categories.LIFESTYLE, title: "Habilidades Manuales", options: [
+                { type: 'v', text: 'Artísticas, creativas pero poco estables.' },
+                { type: 'p', text: 'Técnicas, precisas y eficientes.' },
+                { type: 'k', text: 'Artesanales, lentas pero perfectas.' }
+            ]},
+            { cat: categories.LIFESTYLE, title: "Nivel de Ambición", options: [
+                { type: 'v', text: 'Soñador, idealista, poco práctico.' },
+                { type: 'p', text: 'Muy ambicioso, competitivo y orientado al éxito.' },
+                { type: 'k', text: 'Conformista, valoro más la paz y la familia.' }
+            ]},
+            { cat: categories.LIFESTYLE, title: "Organización Personal", options: [
+                { type: 'v', text: 'Desordenado, pierdo las llaves con frecuencia.' },
+                { type: 'p', text: 'Muy organizado, planificador y sistemático.' },
+                { type: 'k', text: 'Tiendo a acumular objetos innecesarios.' }
+            ]},
+            { cat: categories.LIFESTYLE, title: "Reacción a la Crítica", options: [
+                { type: 'v', text: 'Me hiere profundamente, me pongo ansioso.' },
+                { type: 'p', text: 'Me pongo defensivo y trato de rebatir.' },
+                { type: 'k', text: 'Aparento calma pero guardo resentimiento.' }
+            ]},
+            { cat: categories.LIFESTYLE, title: "Intereses Intelectuales", options: [
+                { type: 'v', text: 'Espiritualidad, arte, conceptos abstractos.' },
+                { type: 'p', text: 'Ciencia, política, herramientas de mejora.' },
+                { type: 'k', text: 'Historia, cocina, bienestar familiar.' }
+            ]},
+            { cat: categories.LIFESTYLE, title: "Resistencia Física al Trabajo", options: [
+                { type: 'v', text: 'Baja, necesito descansos frecuentes.' },
+                { type: 'p', text: 'Moderada, pero ignoro el cansancio por la meta.' },
+                { type: 'k', text: 'Muy alta, aguanto largas jornadas sin fatiga.' }
+            ]}
         ];
 
         let currentStep = 0;
-        let answers = [];
+        let answers = Array(questions.length).fill(null);
 
         function startQuiz() {
             document.getElementById('start-screen').classList.add('hidden');
@@ -206,29 +362,30 @@
         function renderQuestion() {
             const q = questions[currentStep];
             const container = document.getElementById('options-grid');
-            const progress = document.getElementById('progress');
             
+            document.getElementById('category-label').innerText = q.cat;
             document.getElementById('question-title').innerText = q.title;
-            document.getElementById('counter').innerText = `Pregunta ${currentStep + 1} de ${questions.length}`;
-            progress.style.width = `${((currentStep) / questions.length) * 100}%`;
+            document.getElementById('counter').innerText = `${currentStep + 1} / ${questions.length}`;
+            document.getElementById('progress').style.width = `${((currentStep + 1) / questions.length) * 100}%`;
             
             container.innerHTML = '';
-            q.options.forEach((opt, idx) => {
+            q.options.forEach((opt) => {
                 const card = document.createElement('div');
-                card.className = `option-card bg-stone-50 p-5 rounded-xl border border-stone-200 text-stone-700 ${answers[currentStep]?.type === opt.type ? 'selected' : ''}`;
-                card.innerHTML = `<p class="font-medium">${opt.text}</p>`;
+                card.className = `option-card bg-stone-50 p-4 rounded-xl border border-stone-200 text-stone-700 ${answers[currentStep]?.type === opt.type ? 'selected' : ''}`;
+                card.innerHTML = `<p class="text-sm md:text-base leading-snug">${opt.text}</p>`;
                 card.onclick = () => selectOption(opt.type);
                 container.appendChild(card);
             });
 
             document.getElementById('prev-btn').disabled = currentStep === 0;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function selectOption(type) {
             answers[currentStep] = { type };
             if (currentStep < questions.length - 1) {
                 currentStep++;
-                setTimeout(renderQuestion, 200);
+                setTimeout(renderQuestion, 150);
             } else {
                 showResults();
             }
@@ -246,75 +403,68 @@
             document.getElementById('result-screen').classList.remove('hidden');
 
             const counts = answers.reduce((acc, curr) => {
-                acc[curr.type] = (acc[curr.type] || 0) + 1;
+                acc[curr.type]++;
                 return acc;
-            }, { vata: 0, pitta: 0, kapha: 0 });
+            }, { v: 0, p: 0, k: 0 });
 
             const total = answers.length;
-            const percentages = {
-                vata: Math.round((counts.vata / total) * 100),
-                pitta: Math.round((counts.pitta / total) * 100),
-                kapha: Math.round((counts.kapha / total) * 100)
-            };
+            const percV = Math.round((counts.v / total) * 100);
+            const percP = Math.round((counts.p / total) * 100);
+            const percK = Math.round((counts.k / total) * 100);
 
-            // Render Porcentajes
-            const percContainer = document.getElementById('percentages');
-            percContainer.innerHTML = `
-                <div class="text-center">
-                    <p class="text-stone-500 font-semibold mb-1">Vata</p>
-                    <div class="h-24 w-full bg-stone-100 rounded-lg relative overflow-hidden">
-                        <div class="absolute bottom-0 w-full bg-blue-400" style="height: ${percentages.vata}%"></div>
+            // Visual Rendering
+            const visual = document.getElementById('percentages-visual');
+            const data = [
+                { label: 'Vata (Aire/Éter)', val: percV, color: 'bg-blue-400', text: 'text-blue-600' },
+                { label: 'Pitta (Fuego/Agua)', val: percP, color: 'bg-orange-400', text: 'text-orange-600' },
+                { label: 'Kapha (Tierra/Agua)', val: percK, color: 'bg-green-500', text: 'text-green-700' }
+            ].sort((a,b) => b.val - a.val);
+
+            visual.innerHTML = data.map(d => `
+                <div class="space-y-1">
+                    <div class="flex justify-between text-sm font-bold ${d.text}">
+                        <span>${d.label}</span>
+                        <span>${d.val}%</span>
                     </div>
-                    <p class="text-2xl font-bold mt-2 text-blue-600">${percentages.vata}%</p>
+                    <div class="w-full bg-stone-100 rounded-full h-4 overflow-hidden border border-stone-200">
+                        <div class="${d.color} h-full transition-all duration-1000" style="width: ${d.val}%"></div>
+                    </div>
                 </div>
-                <div class="text-center">
-                    <p class="text-stone-500 font-semibold mb-1">Pitta</p>
-                    <div class="h-24 w-full bg-stone-100 rounded-lg relative overflow-hidden">
-                        <div class="absolute bottom-0 w-full bg-orange-400" style="height: ${percentages.pitta}%"></div>
+            `).join('');
+
+            // Análisis Lógico
+            const primary = data[0];
+            const secondary = data[1];
+            const isDual = (primary.val - secondary.val) < 15;
+            
+            let analysisHtml = `
+                <div class="prose prose-stone">
+                    <h3 class="text-2xl text-stone-800">Usted es predominantemente <span class="underline decoration-purple-300">${isDual ? primary.label.split(' ')[0] + '-' + secondary.label.split(' ')[0] : primary.label.split(' ')[0]}</span></h3>
+                    <p class="text-stone-600 mt-4 leading-relaxed">
+                        Tras analizar 48 indicadores biológicos y psicológicos, su constitución original (<strong>Prakriti</strong>) muestra una dominancia de ${primary.label}. 
+                        ${isDual ? `Al ser una tipología dual, usted combina la intensidad de dos energías de manera casi equilibrada.` : `Su perfil muestra una dominancia clara, lo que facilita la identificación de sus fortalezas naturales y vulnerabilidades.`}
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <h4 class="font-bold text-blue-800 text-sm uppercase">Fortalezas</h4>
+                            <ul class="text-xs text-blue-700 mt-2 list-disc pl-4 space-y-1">
+                                ${primary.label.includes('Vata') ? '<li>Creatividad sin límites</li><li>Adaptabilidad rápida</li>' : primary.label.includes('Pitta') ? '<li>Liderazgo natural</li><li>Intelecto agudo</li>' : '<li>Estabilidad emocional</li><li>Gran lealtad</li>'}
+                                ${isDual ? (secondary.label.includes('Pitta') ? '<li>Eficiencia lógica</li>' : '<li>Resistencia física</li>') : ''}
+                            </ul>
+                        </div>
+                        <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
+                            <h4 class="font-bold text-stone-800 text-sm uppercase">Desafíos</h4>
+                            <p class="text-xs text-stone-600 mt-2">
+                                ${primary.label.includes('Vata') ? 'Tiende a la ansiedad y el agotamiento nervioso.' : primary.label.includes('Pitta') ? 'Riesgo de irritabilidad y acidez metabólica.' : 'Riesgo de letargo y apego excesivo.'}
+                            </p>
+                        </div>
                     </div>
-                    <p class="text-2xl font-bold mt-2 text-orange-600">${percentages.pitta}%</p>
-                </div>
-                <div class="text-center">
-                    <p class="text-stone-500 font-semibold mb-1">Kapha</p>
-                    <div class="h-24 w-full bg-stone-100 rounded-lg relative overflow-hidden">
-                        <div class="absolute bottom-0 w-full bg-green-500" style="height: ${percentages.kapha}%"></div>
-                    </div>
-                    <p class="text-2xl font-bold mt-2 text-green-700">${percentages.kapha}%</p>
                 </div>
             `;
 
-            // Determinar Dominancia
-            const sorted = Object.entries(percentages).sort((a, b) => b[1] - a[1]);
-            const primary = sorted[0];
-            const secondary = sorted[1];
-
-            let typeTitle = "";
-            let analysisHtml = "";
-
-            if (primary[1] > 60) {
-                typeTitle = `Constitución Predominante: ${primary[0].toUpperCase()}`;
-            } else {
-                typeTitle = `Constitución Dual: ${primary[0].toUpperCase()}-${secondary[0].toUpperCase()}`;
-            }
-
-            const descriptions = {
-                vata: "<strong>Vata (Aire y Éter):</strong> Governa el movimiento y la comunicación. Tienes una mente creativa y entusiasta. Cuando estás en equilibrio, eres vivaz y flexible. En desequilibrio, tiendes a la ansiedad y la irregularidad digestiva.",
-                pitta: "<strong>Pitta (Fuego y Agua):</strong> Rige la transformación y el metabolismo. Posees un intelecto agudo y gran capacidad de liderazgo. En equilibrio, eres decidido y emprendedor. El exceso de calor puede volverte irritable o propenso a inflamaciones.",
-                kapha: "<strong>Kapha (Tierra y Agua):</strong> Proporciona estructura y estabilidad. Eres naturalmente calmado, compasivo y resistente. En equilibrio, eres el apoyo de quienes te rodean. Si se acumula en exceso, puede causar letargo o apego emocional."
-            };
-
-            analysisHtml = `
-                <h3 class="text-xl font-semibold text-stone-800">${typeTitle}</h3>
-                <p>${descriptions[primary[0]]}</p>
-                <p>${primary[1] < 60 ? `Al ser una tipología mixta, también presentas rasgos significativos de ${descriptions[secondary[0]]}` : ''}</p>
-                
-                <div class="bg-stone-50 p-4 rounded-xl border border-stone-200 mt-6">
-                    <h4 class="font-bold mb-2">Recomendación General:</h4>
-                    <p class="text-sm">Recuerda que este test identifica tu <strong>Prakriti</strong> (naturaleza innata). Si actualmente sientes síntomas muy diferentes a estos resultados, podrías estar experimentando un <strong>Vikriti</strong> (desequilibrio temporal). Se recomienda consultar a un profesional ayurvédico para un diagnóstico de pulso profundo.</p>
-                </div>
-            `;
-
-            document.getElementById('analysis-text').innerHTML = analysisHtml;
+            document.getElementById('analysis-box').innerHTML = analysisHtml;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>
