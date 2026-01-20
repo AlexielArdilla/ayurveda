@@ -1,3 +1,3 @@
 # Cuestionario doshas online
 
-## URL: 
+## URL: https://alexielardilla.github.io/ayurveda/
