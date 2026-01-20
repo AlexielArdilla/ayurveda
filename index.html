@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Constitución Ayurvédica (Prakriti)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f5f2;
+            color: #2d3436;
+        }
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+        }
+        .option-card {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .option-card:hover {
+            transform: translateY(-2px);
+            background-color: #ffffff;
+        }
+        .option-card.selected {
+            border-color: #8b5cf6;
+            background-color: #f3f0ff;
+        }
+        .progress-bar {
+            transition: width 0.4s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="bg-white border-b border-stone-200 py-6 px-4 text-center sticky top-0 z-10 shadow-sm">
+        <h1 class="text-2xl md:text-3xl text-stone-800">Descubre tu Prakriti</h1>
+        <p class="text-stone-500 text-sm mt-1">Cuestionario Integral de Autoconocimiento</p>
+    </header>
+
+    <main id="app" class="flex-grow container mx-auto max-w-2xl px-4 py-8">
+        <!-- Pantalla de Inicio -->
+        <div id="start-screen" class="text-center space-y-6">
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-stone-100">
+                <p class="text-lg text-stone-600 leading-relaxed mb-6">
+                    Este test está basado en protocolos clínicos de investigación ayurvédica. Para obtener un resultado preciso, responde según tus tendencias naturales <strong>a lo largo de tu vida</strong>, no solo como te sientes hoy.
+                </p>
+                <button onclick="startQuiz()" class="bg-stone-800 text-white px-8 py-3 rounded-full font-semibold hover:bg-stone-700 transition">
+                    Comenzar Cuestionario
+                </button>
+            </div>
+        </div>
+
+        <!-- Pantalla de Cuestionario -->
+        <div id="quiz-screen" class="hidden space-y-8">
+            <div class="w-full bg-stone-200 rounded-full h-2">
+                <div id="progress" class="bg-purple-500 h-2 rounded-full progress-bar" style="width: 0%"></div>
+            </div>
+
+            <div id="question-container" class="space-y-4">
+                <h2 id="question-title" class="text-xl md:text-2xl text-stone-800"></h2>
+                <div id="options-grid" class="grid grid-cols-1 gap-4">
+                    <!-- Opciones inyectadas por JS -->
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center pt-4">
+                <button id="prev-btn" onclick="prevQuestion()" class="text-stone-400 font-medium disabled:opacity-30">
+                    &larr; Anterior
+                </button>
+                <span id="counter" class="text-stone-400 text-sm"></span>
+            </div>
+        </div>
+
+        <!-- Pantalla de Resultados -->
+        <div id="result-screen" class="hidden space-y-8">
+            <div class="bg-white p-8 rounded-2xl shadow-lg border border-stone-100">
+                <h2 class="text-3xl text-center mb-6">Tu Análisis de Doshas</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" id="percentages">
+                    <!-- Barras de porcentaje inyectadas -->
+                </div>
+
+                <div id="analysis-text" class="prose prose-stone max-w-none text-stone-700 space-y-6">
+                    <!-- Texto de análisis inyectado -->
+                </div>
+
+                <div class="mt-10 text-center">
+                    <button onclick="location.reload()" class="border border-stone-300 px-6 py-2 rounded-full text-stone-600 hover:bg-stone-50">
+                        Repetir Test
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-6 text-center text-stone-400 text-xs">
+        <p>© 2026 Protocolo de Investigación Ayurvédica - Herramienta Educativa</p>
+    </footer>
+
+    <script>
+        const questions = [
+            {
+                id: 1,
+                title: "¿Cómo clasificaría su estructura ósea y marco físico natural?",
+                options: [
+                    { type: 'vata', text: 'Delgado, estrecho, muy alto o muy bajo. Huesos prominentes y ligeros.' },
+                    { type: 'pitta', text: 'Mediano, proporcionado y simétrico. Estructura atlética natural.' },
+                    { type: 'kapha', text: 'Ancho, denso ("huesos grandes"). Estructura sólida y resistente.' }
+                ]
+            },
+            {
+                id: 2,
+                title: "¿Cuál es la textura y temperatura predominante de su piel?",
+                options: [
+                    { type: 'vata', text: 'Seca, fina, fría y áspera. Tendencia a agrietarse.' },
+                    { type: 'pitta', text: 'Cálida, suave, sensible. Propensa a rojeces o lunares.' },
+                    { type: 'kapha', text: 'Fresca, gruesa, pálida y suave. Naturalmente hidratada y aceitosa.' }
+                ]
+            },
+            {
+                id: 3,
+                title: "Describa la densidad y textura de su cabello:",
+                options: [
+                    { type: 'vata', text: 'Seco, escaso, fino y quebradizo. A menudo rizado o encrespado.' },
+                    { type: 'pitta', text: 'Fino, lacio y sedoso. Tendencia a encanecer o calvicie prematura.' },
+                    { type: 'kapha', text: 'Grueso, denso, ondulado y lustroso. Muy fuerte y abundante.' }
+                ]
+            },
+            {
+                id: 4,
+                title: "¿Cómo describiría la cualidad de su mirada y sus ojos?",
+                options: [
+                    { type: 'vata', text: 'Pequeños, hundidos, mirada inquieta y parpadeo frecuente.' },
+                    { type: 'pitta', text: 'Medianos, mirada aguda y penetrante. Sensibles a la luz.' },
+                    { type: 'kapha', text: 'Grandes, redondos, pestañas espesas. Mirada calmada y serena.' }
+                ]
+            },
+            {
+                id: 5,
+                title: "¿Cómo es la regularidad de su apetito y digestión?",
+                options: [
+                    { type: 'vata', text: 'Errático e irregular. Gases y distensión abdominal frecuente.' },
+                    { type: 'pitta', text: 'Intenso y puntual. Si no como, me irrito (hambre feroz).' },
+                    { type: 'kapha', text: 'Bajo pero constante. Digestión lenta, me siento pesado tras comer.' }
+                ]
+            },
+            {
+                id: 6,
+                title: "Describa su patrón de eliminación (evacuaciones):",
+                options: [
+                    { type: 'vata', text: 'Irregular, tendencia al estreñimiento. Heces secas o duras.' },
+                    { type: 'pitta', text: 'Frecuente (varias veces al día). Heces blandas o sueltas.' },
+                    { type: 'kapha', text: 'Regular y predecible (1 vez al día). Heces pesadas y formadas.' }
+                ]
+            },
+            {
+                id: 7,
+                title: "¿Cuál es su tolerancia a las temperaturas?",
+                options: [
+                    { type: 'vata', text: 'Aversión al frío y al viento. Manos y pies siempre fríos.' },
+                    { type: 'pitta', text: 'Aversión al calor y al sol directo. Sudo profusamente.' },
+                    { type: 'kapha', text: 'Aversión al frío húmedo (niebla). Tolero bien el calor seco.' }
+                ]
+            },
+            {
+                id: 8,
+                title: "Bajo situaciones de estrés agudo, ¿cuál es su reacción?",
+                options: [
+                    { type: 'vata', text: 'Miedo, ansiedad, preocupación excesiva e insomnio.' },
+                    { type: 'pitta', text: 'Ira, irritabilidad, impaciencia y agresividad verbal.' },
+                    { type: 'kapha', text: 'Retraimiento, silencio, terquedad o comer por emoción.' }
+                ]
+            },
+            {
+                id: 9,
+                title: "¿Cómo es su estilo de aprendizaje y memoria?",
+                options: [
+                    { type: 'vata', text: 'Aprendo rápido pero olvido rápido. Atención dispersa.' },
+                    { type: 'pitta', text: 'Intelecto agudo y lógico. Excelente enfoque y memoria.' },
+                    { type: 'kapha', text: 'Aprendizaje lento pero memoria a largo plazo excepcional.' }
+                ]
+            },
+            {
+                id: 10,
+                title: "¿Cómo es la calidad de su sueño habitualmente?",
+                options: [
+                    { type: 'vata', text: 'Ligero e interrumpido. Dificultad para conciliar el sueño.' },
+                    { type: 'pitta', text: 'Moderado (6-8h). Sueños intensos, vívidos y a color.' },
+                    { type: 'kapha', text: 'Pesado y prolongado (>8h). Dificultad extrema para despertar.' }
+                ]
+            }
+        ];
+
+        let currentStep = 0;
+        let answers = [];
+
+        function startQuiz() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentStep];
+            const container = document.getElementById('options-grid');
+            const progress = document.getElementById('progress');
+            
+            document.getElementById('question-title').innerText = q.title;
+            document.getElementById('counter').innerText = `Pregunta ${currentStep + 1} de ${questions.length}`;
+            progress.style.width = `${((currentStep) / questions.length) * 100}%`;
+            
+            container.innerHTML = '';
+            q.options.forEach((opt, idx) => {
+                const card = document.createElement('div');
+                card.className = `option-card bg-stone-50 p-5 rounded-xl border border-stone-200 text-stone-700 ${answers[currentStep]?.type === opt.type ? 'selected' : ''}`;
+                card.innerHTML = `<p class="font-medium">${opt.text}</p>`;
+                card.onclick = () => selectOption(opt.type);
+                container.appendChild(card);
+            });
+
+            document.getElementById('prev-btn').disabled = currentStep === 0;
+        }
+
+        function selectOption(type) {
+            answers[currentStep] = { type };
+            if (currentStep < questions.length - 1) {
+                currentStep++;
+                setTimeout(renderQuestion, 200);
+            } else {
+                showResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentStep > 0) {
+                currentStep--;
+                renderQuestion();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            const counts = answers.reduce((acc, curr) => {
+                acc[curr.type] = (acc[curr.type] || 0) + 1;
+                return acc;
+            }, { vata: 0, pitta: 0, kapha: 0 });
+
+            const total = answers.length;
+            const percentages = {
+                vata: Math.round((counts.vata / total) * 100),
+                pitta: Math.round((counts.pitta / total) * 100),
+                kapha: Math.round((counts.kapha / total) * 100)
+            };
+
+            // Render Porcentajes
+            const percContainer = document.getElementById('percentages');
+            percContainer.innerHTML = `
+                <div class="text-center">
+                    <p class="text-stone-500 font-semibold mb-1">Vata</p>
+                    <div class="h-24 w-full bg-stone-100 rounded-lg relative overflow-hidden">
+                        <div class="absolute bottom-0 w-full bg-blue-400" style="height: ${percentages.vata}%"></div>
+                    </div>
+                    <p class="text-2xl font-bold mt-2 text-blue-600">${percentages.vata}%</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-stone-500 font-semibold mb-1">Pitta</p>
+                    <div class="h-24 w-full bg-stone-100 rounded-lg relative overflow-hidden">
+                        <div class="absolute bottom-0 w-full bg-orange-400" style="height: ${percentages.pitta}%"></div>
+                    </div>
+                    <p class="text-2xl font-bold mt-2 text-orange-600">${percentages.pitta}%</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-stone-500 font-semibold mb-1">Kapha</p>
+                    <div class="h-24 w-full bg-stone-100 rounded-lg relative overflow-hidden">
+                        <div class="absolute bottom-0 w-full bg-green-500" style="height: ${percentages.kapha}%"></div>
+                    </div>
+                    <p class="text-2xl font-bold mt-2 text-green-700">${percentages.kapha}%</p>
+                </div>
+            `;
+
+            // Determinar Dominancia
+            const sorted = Object.entries(percentages).sort((a, b) => b[1] - a[1]);
+            const primary = sorted[0];
+            const secondary = sorted[1];
+
+            let typeTitle = "";
+            let analysisHtml = "";
+
+            if (primary[1] > 60) {
+                typeTitle = `Constitución Predominante: ${primary[0].toUpperCase()}`;
+            } else {
+                typeTitle = `Constitución Dual: ${primary[0].toUpperCase()}-${secondary[0].toUpperCase()}`;
+            }
+
+            const descriptions = {
+                vata: "<strong>Vata (Aire y Éter):</strong> Governa el movimiento y la comunicación. Tienes una mente creativa y entusiasta. Cuando estás en equilibrio, eres vivaz y flexible. En desequilibrio, tiendes a la ansiedad y la irregularidad digestiva.",
+                pitta: "<strong>Pitta (Fuego y Agua):</strong> Rige la transformación y el metabolismo. Posees un intelecto agudo y gran capacidad de liderazgo. En equilibrio, eres decidido y emprendedor. El exceso de calor puede volverte irritable o propenso a inflamaciones.",
+                kapha: "<strong>Kapha (Tierra y Agua):</strong> Proporciona estructura y estabilidad. Eres naturalmente calmado, compasivo y resistente. En equilibrio, eres el apoyo de quienes te rodean. Si se acumula en exceso, puede causar letargo o apego emocional."
+            };
+
+            analysisHtml = `
+                <h3 class="text-xl font-semibold text-stone-800">${typeTitle}</h3>
+                <p>${descriptions[primary[0]]}</p>
+                <p>${primary[1] < 60 ? `Al ser una tipología mixta, también presentas rasgos significativos de ${descriptions[secondary[0]]}` : ''}</p>
+                
+                <div class="bg-stone-50 p-4 rounded-xl border border-stone-200 mt-6">
+                    <h4 class="font-bold mb-2">Recomendación General:</h4>
+                    <p class="text-sm">Recuerda que este test identifica tu <strong>Prakriti</strong> (naturaleza innata). Si actualmente sientes síntomas muy diferentes a estos resultados, podrías estar experimentando un <strong>Vikriti</strong> (desequilibrio temporal). Se recomienda consultar a un profesional ayurvédico para un diagnóstico de pulso profundo.</p>
+                </div>
+            `;
+
+            document.getElementById('analysis-text').innerHTML = analysisHtml;
+        }
+    </script>
+</body>
+</html>
